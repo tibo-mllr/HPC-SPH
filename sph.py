@@ -249,7 +249,7 @@ def main():
     plt.ylabel("density")
 
     # Save figure
-    plt.savefig("sph.png", dpi=240)
+    # plt.savefig("sph.png", dpi=240)
     plt.show()
 
     return 0
