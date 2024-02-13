@@ -12,7 +12,7 @@ Simulate the structure of a star with SPH
 
 def W(x, y, z, h):
     """
-    Gausssian Smoothing kernel (3D)
+    Gaussian Smoothing kernel (3D)
         x     is a vector/matrix of x positions
         y     is a vector/matrix of y positions
         z     is a vector/matrix of z positions
@@ -249,7 +249,7 @@ def main():
     plt.ylabel("density")
 
     # Save figure
-    plt.savefig("sph.png", dpi=240)
+    # plt.savefig("sph.png", dpi=240)
     plt.show()
 
     return 0
