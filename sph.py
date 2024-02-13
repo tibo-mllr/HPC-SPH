@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sph_cython
+from line_profiler import LineProfiler
 from scipy.special import gamma
 
 """
@@ -29,7 +31,7 @@ def W(x, y, z, h):
 
 def gradW(x, y, z, h):
     """
-    Gradient of the Gausssian Smoothing kernel (3D)
+    Gradient of the Gaussian Smoothing kernel (3D)
     x     is a vector/matrix of x positions
     y     is a vector/matrix of y positions
     z     is a vector/matrix of z positions
@@ -133,7 +135,7 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
 
     # Get pairwise distances and gradients
     dx, dy, dz = getPairwiseSeparations(pos, pos)
-    dWx, dWy, dWz = gradW(dx, dy, dz, h)
+    dWx, dWy, dWz = sph_cython.gradW1(dx, dy, dz, h)
 
     # Add Pressure contribution to accelerations
     ax = -np.sum(m * (P / rho**2 + P.T / rho.T**2) * dWx, 1).reshape((N, 1))
