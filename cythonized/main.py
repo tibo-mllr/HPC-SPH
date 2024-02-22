@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import sph_cython
+from .sph_cython import getDensity, main
 from scipy.special import gamma
 
 """
@@ -11,7 +11,7 @@ Simulate the structure of a star with SPH
 """
 
 
-def main():
+def run():
     """SPH simulation"""
 
     # Simulation parameters
@@ -53,10 +53,10 @@ def main():
     rr[:, 0] = rlin
     rho_analytic = lmbda / (4 * k) * (R**2 - rlin**2)
 
-    pos = sph_cython.main(N, Nt, dt, m, h, k, n, lmbda, nu)
+    pos = main(N, Nt, dt, m, h, k, n, lmbda, nu)
 
     # get density for plotting
-    rho = np.asarray(sph_cython.getDensity(pos, pos, m, h))
+    rho = np.asarray(getDensity(pos, pos, m, h))
 
     plt.sca(ax1)
     plt.cla()
@@ -74,7 +74,7 @@ def main():
     ax2.set(xlim=(0, 1), ylim=(0, 3))
     ax2.set_aspect(0.1)
     plt.plot(rlin, rho_analytic, color="gray", linewidth=2)
-    rho_radial = np.asarray(sph_cython.getDensity(rr, pos, m, h))
+    rho_radial = np.asarray(getDensity(rr, pos, m, h))
     plt.plot(rlin, rho_radial, color="blue")
     plt.pause(0.001)
 
