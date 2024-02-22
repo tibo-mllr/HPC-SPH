@@ -1,20 +1,26 @@
 import argparse
 from cythonized import run_cython
 from normal import run_normal
+from numba_code import run_numba
 import subprocess
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "--cython-setup",
+        action="store_true",
+        help="Run the cythonized setup.py file to compile the cython code",
+    )
+    parser.add_argument(
         "--cython",
         action="store_true",
         help="Run the cythonized version of the code",
     )
     parser.add_argument(
-        "--cython-setup",
+        "--numba",
         action="store_true",
-        help="Run the cythonized setup.py file to compile the cython code",
+        help="Run the numba version of the code",
     )
 
     args = parser.parse_args()
@@ -23,6 +29,8 @@ def main():
         subprocess.run(["python3", "cythonized/setup.py", "build_ext", "--inplace"])
     elif args.cython:
         run_cython()
+    elif args.numba:
+        run_numba()
     else:
         run_normal()
 
