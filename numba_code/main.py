@@ -11,6 +11,7 @@ Simulate the structure of a star with SPH
 """
 
 
+@jit()
 def W(x, y, z, h):
     """
     Gaussian Smoothing kernel (3D)
@@ -49,6 +50,7 @@ def gradW(x, y, z, h):
     return wx, wy, wz
 
 
+@jit()
 def getPairwiseSeparations(ri, rj):
     """
     Get pairwise desprations between 2 sets of coordinates
@@ -97,6 +99,7 @@ def getDensity(r, pos, m, h):
     return rho
 
 
+@jit()
 def getPressure(rho, k, n):
     """
     Equation of State

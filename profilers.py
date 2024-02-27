@@ -40,7 +40,11 @@ def main():
             run_normal()
 
     for key, value in duration_dict.items():
-        print(f"Average time for {key}: {((sum(value)/len(value))/1e9):.3e} s")
+        if "numba" in key:
+            value = value[1:]
+        print(
+            f"Average time ({len(value)} exp) for {key}: {((sum(value)/len(value))/1e9):.3e} s"
+        )
         print(
             f"Standard deviation for {key}: {((sum([(x - sum(value)/len(value))**2 for x in value])/len(value))/1e9):.3e} s"
         )
