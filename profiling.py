@@ -1,5 +1,5 @@
 import argparse
-from profiling import run_cython, run_normal, run_numba, duration_dict
+from profilers import run_cython, run_normal, run_numba, duration_dict
 
 
 def main():
