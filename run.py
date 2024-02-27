@@ -1,5 +1,6 @@
 import argparse
 from cythonized import run_cython
+from normal import run_normal
 import subprocess
 
 
@@ -20,8 +21,10 @@ def main():
 
     if args.cython_setup:
         subprocess.run(["python3", "cythonized/setup.py", "build_ext", "--inplace"])
-    if args.cython:
+    elif args.cython:
         run_cython()
+    else:
+        run_normal()
 
 
 if __name__ == "__main__":
