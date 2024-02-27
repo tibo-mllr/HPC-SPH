@@ -1,4 +1,5 @@
 import argparse
+from math import sqrt
 from profilers import run_cython, run_normal, run_numba, duration_dict
 
 
@@ -48,12 +49,16 @@ def main():
     for key, value in duration_dict.items():
         if "numba" in key:
             value = value[1:]
-        print(
-            f"Average time ({len(value)} exp) for {key}: {((sum(value)/len(value))/1e9):.3e} s"
-        )
-        print(
-            f"Standard deviation for {key}: {((sum([(x - sum(value)/len(value))**2 for x in value])/len(value))/1e9):.3e} s"
-        )
+
+        # Calculate average
+        avg = sum(value) / len(value)
+
+        # Calculate standard deviation
+        variance = sum((x - avg) ** 2 for x in value) / len(value)
+        std_dev = sqrt(variance)
+
+        print(f"Average time ({len(value)} exp) for {key}: {(avg / 1e9):.3e} s")
+        print(f"Standard deviation for {key}: {(std_dev / 1e9):.3e} s")
         print()
 
 
