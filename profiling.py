@@ -20,8 +20,14 @@ def main():
         help="Run the GPU version of the code",
     )
     parser.add_argument(
+        "--normal",
+        action="store_true",
+        help="Run the normal version of the code",
+    )
+    parser.add_argument(
         "--experiments",
         action="store",
+        type=int,
         help="How many experiments to run for the average time",
         default=10,
     )
@@ -32,11 +38,11 @@ def main():
         print(f"Experiment {i+1}/{args.experiments}")
         if args.cython:
             run_cython()
-        elif args.numba:
+        if args.numba:
             run_numba()
-        # elif args.gpu:
+        # if args.gpu:
         #     run_gpu()
-        else:
+        if args.normal:
             run_normal()
 
     for key, value in duration_dict.items():
@@ -48,6 +54,7 @@ def main():
         print(
             f"Standard deviation for {key}: {((sum([(x - sum(value)/len(value))**2 for x in value])/len(value))/1e9):.3e} s"
         )
+        print()
 
 
 if __name__ == "__main__":
