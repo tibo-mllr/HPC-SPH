@@ -221,7 +221,7 @@ def run(args):
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if plotRealTime or (i == Nt - 1):
+        if args.plot and (plotRealTime or (i == Nt - 1)):
             plt.sca(ax1)
             plt.cla()
             cval = np.minimum((rho - 3) / 3, 1).flatten()
@@ -251,6 +251,7 @@ def run(args):
 
     # Save figure
     # plt.savefig("sph.png", dpi=240)
-    # plt.show()
+    if args.plot:
+        plt.show()
 
     return 0

@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.special import gamma
 from numba import jit
-import time
 
 """
 Create Your Own Smoothed-Particle-Hydrodynamics Simulation (With Python)
@@ -112,9 +111,6 @@ def getPressure(rho, k, n):
     return P
 
 
-times = []
-
-
 def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     """
     Calculate the acceleration on each SPH particle
@@ -140,13 +136,7 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     # Get pairwise distances and gradients
     dx, dy, dz = getPairwiseSeparations(pos, pos)
 
-    time_before = time.time_ns()
     dWx, dWy, dWz = gradW(dx, dy, dz, h)
-    time_after = time.time_ns()
-
-    total_time = (time_after - time_before) / 1e9
-    times.append(total_time)
-    print(f"the function took {total_time:.4f} s")
 
     # Add Pressure contribution to accelerations
     ax = -np.sum(m * (P / rho**2 + P.T / rho.T**2) * dWx, 1).reshape((N, 1))
@@ -239,7 +229,7 @@ def main(args):
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if plotRealTime or (i == Nt - 1):
+        if args.plot and (plotRealTime or (i == Nt - 1)):
             plt.sca(ax1)
             plt.cla()
             cval = np.minimum((rho - 3) / 3, 1).flatten()
@@ -269,9 +259,8 @@ def main(args):
 
     # Save figure
     # plt.savefig("sph.png", dpi=240)
-    plt.show()
-
-    print(f"This is the average time: {sum(times[1:]) / len(times[1:])}")
+    if args.plot:
+        plt.show()
 
     return 0
 

@@ -10,6 +10,7 @@ Philip Mocz (2020) Princeton Univeristy, @PMocz
 Simulate the structure of a star with SPH
 """
 
+
 def W(x, y, z, h):
     """
     Gaussian Smoothing kernel (3D) using CuPy for GPU acceleration
@@ -26,6 +27,7 @@ def W(x, y, z, h):
     w = (1.0 / (h * cp.sqrt(cp.pi))) ** 3 * cp.exp(-(r**2) / h**2)
 
     return w
+
 
 def gradW(x, y, z, h):
     """
@@ -108,6 +110,7 @@ def getPressure(rho, k, n):
 
     return P
 
+
 # @timefn
 def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     """
@@ -151,7 +154,8 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
 
     return a
 
-def run():
+
+def run(plot=True):
     """SPH simulation"""
 
     # Simulation parameters
@@ -219,17 +223,21 @@ def run():
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if plotRealTime or (i == Nt - 1):
+        if plot and (plotRealTime or (i == Nt - 1)):
             plt.sca(ax1)
             plt.cla()
 
             # Ensure cval is a NumPy array
-            cval = np.minimum((rho.get() - 3) / 3, 1).flatten()  # Assuming rho is a CuPy array
+            cval = np.minimum(
+                (rho.get() - 3) / 3, 1
+            ).flatten()  # Assuming rho is a CuPy array
 
             # Convert pos1 to a NumPy array
             pos1 = pos.get()
 
-            plt.scatter(pos1[:, 0], pos1[:, 1], c=cval, cmap=plt.cm.autumn, s=10, alpha=0.5)
+            plt.scatter(
+                pos1[:, 0], pos1[:, 1], c=cval, cmap=plt.cm.autumn, s=10, alpha=0.5
+            )
             ax1.set(xlim=(-1.4, 1.4), ylim=(-1.2, 1.2))
             ax1.set_aspect("equal", "box")
             ax1.set_xticks([-1, 0, 1])
@@ -247,17 +255,19 @@ def run():
             plt.plot(rlin_np, rho_analytic.get(), color="gray", linewidth=2)
 
             # Ensure rho_radial is a NumPy array
-            rho_radial = getDensity(rr, pos, m, h).get()  # Assuming the result is a CuPy array
+            rho_radial = getDensity(
+                rr, pos, m, h
+            ).get()  # Assuming the result is a CuPy array
 
             plt.plot(rlin_np, rho_radial, color="blue")
             plt.pause(0.001)
-
 
     # add labels/legend
     # plt.sca(ax2)
     # plt.xlabel("radius")
     # plt.ylabel("density")
 
-    # plt.show()
+    if plot:
+        plt.show()
 
     return 0
