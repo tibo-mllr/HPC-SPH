@@ -167,7 +167,6 @@ def run(args):
     k = 0.1  # equation of state constant
     n = 1  # polytropic index
     nu = 1  # damping
-    # plotRealTime = True  # switch on for plotting as the simulation goes along
 
     # Generate Initial Conditions
     np.random.seed(42)  # set the random number generator seed
@@ -221,7 +220,7 @@ def run(args):
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if args.plot and (plotRealTime or (i == Nt - 1)):
+        if plotRealTime or (i == Nt - 1):
             plt.sca(ax1)
             plt.cla()
             cval = np.minimum((rho - 3) / 3, 1).flatten()
@@ -244,14 +243,12 @@ def run(args):
             plt.plot(rlin, rho_radial, color="blue")
             plt.pause(0.001)
 
-    # add labels/legend
-    plt.sca(ax2)
-    plt.xlabel("radius")
-    plt.ylabel("density")
-
-    # Save figure
-    # plt.savefig("sph.png", dpi=240)
     if args.plot:
+        # add labels/legend
+        plt.sca(ax2)
+        plt.xlabel("radius")
+        plt.ylabel("density")
+
         plt.show()
 
     return 0

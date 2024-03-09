@@ -158,7 +158,7 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     return a
 
 
-def main(args):
+def run(args):
     """SPH simulation"""
     N = args.N
     plotRealTime = args.plot
@@ -173,7 +173,6 @@ def main(args):
     k = 0.1  # equation of state constant
     n = 1  # polytropic index
     nu = 1  # damping
-    # plotRealTime = True  # switch on for plotting as the simulation goes along
 
     # Generate Initial Conditions
     np.random.seed(42)  # set the random number generator seed
@@ -190,13 +189,8 @@ def main(args):
     pos = np.random.randn(N, 3)  # randomly selected positions and velocities
     vel = np.zeros(pos.shape)
 
-    # calculate initial gravitational accelerations************************
-    # time_before = time.time_ns()
     acc = getAcc(pos, vel, m, h, k, n, lmbda, nu)
-    # time_after = time.time_ns()
 
-    # total_time = (time_after - time_before) / 1e9
-    # print(f"the function took {total_time:.4f} s" )
     # number of timesteps
     Nt = int(np.ceil(tEnd / dt))
 
@@ -212,7 +206,6 @@ def main(args):
 
     # Simulation Main Loop
     for i in range(Nt):
-        # if i >1000: break
         # (1/2) kick
         vel += acc * dt / 2
 
@@ -232,7 +225,7 @@ def main(args):
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if args.plot and (plotRealTime or (i == Nt - 1)):
+        if plotRealTime or (i == Nt - 1):
             plt.sca(ax1)
             plt.cla()
             cval = np.minimum((rho - 3) / 3, 1).flatten()
@@ -255,18 +248,12 @@ def main(args):
             plt.plot(rlin, rho_radial, color="blue")
             plt.pause(0.001)
 
-    # add labels/legend
-    plt.sca(ax2)
-    plt.xlabel("radius")
-    plt.ylabel("density")
-
-    # Save figure
-    # plt.savefig("sph.png", dpi=240)
     if args.plot:
+        # add labels/legend
+        plt.sca(ax2)
+        plt.xlabel("radius")
+        plt.ylabel("density")
+
         plt.show()
 
     return 0
-
-
-if __name__ == "__main__":
-    main()

@@ -31,7 +31,7 @@ def W(x, y, z, h):
 
 def gradW(x, y, z, h):
     """
-    Gradient of the Gausssian Smoothing kernel (3D)
+    Gradient of the Gaussian Smoothing kernel (3D)
     x     is a vector/matrix of x positions
     y     is a vector/matrix of y positions
     z     is a vector/matrix of z positions
@@ -154,7 +154,7 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     return a
 
 
-def run(plot=True):
+def run(args):
     """SPH simulation"""
 
     # Simulation parameters
@@ -168,7 +168,7 @@ def run(plot=True):
     k = 0.1  # equation of state constant
     n = 1  # polytropic index
     nu = 1  # damping
-    plotRealTime = False  # switch on for plotting as the simulation goes along
+    plotRealTime = args.plot  # switch on for plotting as the simulation goes along
 
     # Generate Initial Conditions
     cp.random.seed(42)  # set the random number generator seed
@@ -222,7 +222,7 @@ def run(plot=True):
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if plot and (plotRealTime or (i == Nt - 1)):
+        if plotRealTime or (i == Nt - 1):
             plt.sca(ax1)
             plt.cla()
 
@@ -261,12 +261,12 @@ def run(plot=True):
             plt.plot(rlin_np, rho_radial, color="blue")
             plt.pause(0.001)
 
-    # add labels/legend
-    # plt.sca(ax2)
-    # plt.xlabel("radius")
-    # plt.ylabel("density")
+    if args.plot:
+        # add labels/legend
+        plt.sca(ax2)
+        plt.xlabel("radius")
+        plt.ylabel("density")
 
-    if plot:
         plt.show()
 
     return 0

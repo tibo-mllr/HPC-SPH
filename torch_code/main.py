@@ -1,5 +1,4 @@
 import numpy as np
-import cupy as cp
 import torch
 import matplotlib.pyplot as plt
 from scipy.special import gamma
@@ -12,7 +11,7 @@ Simulate the structure of a star with SPH
 """
 
 device = None
-pi_tensor = None 
+pi_tensor = None
 
 
 def W(x, y, z, h):
@@ -34,9 +33,10 @@ def W(x, y, z, h):
 
     return w
 
+
 def gradW(x, y, z, h):
     """
-    Gradient of the Gausssian Smoothing kernel (3D)
+    Gradient of the Gaussian Smoothing kernel (3D)
     x     is a vector/matrix of x positions
     y     is a vector/matrix of y positions
     z     is a vector/matrix of z positions
@@ -115,7 +115,7 @@ def getPressure(rho, k, n):
 
     return P
 
-# @timefn
+
 def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     """
     Calculate the acceleration on each SPH particle
@@ -158,10 +158,11 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
 
     return a
 
+
 def run(args):
     """SPH simulation"""
     global device
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     global pi_tensor
     pi_tensor = torch.tensor(torch.pi, device=device)
     # Simulation parameters
@@ -177,13 +178,12 @@ def run(args):
     k = 0.1  # equation of state constant
     n = 1  # polytropic index
     nu = 1  # damping
-    # plotRealTime = True  # switch on for plotting as the simulation goes along
 
     # Generate Initial Conditions
     # torch.random.seed()  # set the random number generator seed
     torch.manual_seed(42)
     torch.cuda.manual_seed(42)
-    
+
     lmbda = (
         2
         * k
@@ -195,18 +195,15 @@ def run(args):
 
     m = M / N  # single particle mass
 
-
-    
     lmbda = torch.tensor(lmbda, dtype=torch.float32, device=device)
-    # N = torch.tensor(N, dtype=torch.float32, device=device)
     m = torch.tensor(m, dtype=torch.float32, device=device)
     h = torch.tensor(h, dtype=torch.float32, device=device)
     k = torch.tensor(k, dtype=torch.float32, device=device)
     n = torch.tensor(n, dtype=torch.float32, device=device)
     nu = torch.tensor(nu, dtype=torch.float32, device=device)
 
-    pos = torch.randn(N,3,device=device)  # randomly selected positions and velocities
-    vel = torch.zeros(pos.shape,device=device)
+    pos = torch.randn(N, 3, device=device)  # randomly selected positions and velocities
+    vel = torch.zeros(pos.shape, device=device)
 
     # calculate initial gravitational accelerations
     acc = getAcc(pos, vel, m, h, k, n, lmbda, nu)
@@ -218,8 +215,8 @@ def run(args):
     grid = plt.GridSpec(3, 1, wspace=0.0, hspace=0.3)
     ax1 = plt.subplot(grid[0:2, 0])
     ax2 = plt.subplot(grid[2, 0])
-    rr = torch.zeros((100, 3),device=device)
-    rlin = torch.linspace(0, 1, 100,device=device)
+    rr = torch.zeros((100, 3), device=device)
+    rlin = torch.linspace(0, 1, 100, device=device)
     rr[:, 0] = rlin
     rho_analytic = lmbda / (4 * k) * (R**2 - rlin**2)
 
@@ -249,12 +246,16 @@ def run(args):
             plt.cla()
 
             # Ensure cval is a NumPy array
-            cval = np.minimum((rho.cpu().numpy() - 3) / 3, 1).flatten()  # Assuming rho is a CuPy array
+            cval = np.minimum(
+                (rho.cpu().numpy() - 3) / 3, 1
+            ).flatten()  # Assuming rho is a CuPy array
 
             # Convert pos1 to a NumPy array
             pos1 = pos.cpu().numpy()
 
-            plt.scatter(pos1[:, 0], pos1[:, 1], c=cval, cmap=plt.cm.autumn, s=10, alpha=0.5)
+            plt.scatter(
+                pos1[:, 0], pos1[:, 1], c=cval, cmap=plt.cm.autumn, s=10, alpha=0.5
+            )
             ax1.set(xlim=(-1.4, 1.4), ylim=(-1.2, 1.2))
             ax1.set_aspect("equal", "box")
             ax1.set_xticks([-1, 0, 1])
@@ -272,17 +273,19 @@ def run(args):
             plt.plot(rlin_np, rho_analytic.cpu().numpy(), color="gray", linewidth=2)
 
             # Ensure rho_radial is a NumPy array
-            rho_radial = getDensity(rr, pos, m, h).cpu().numpy()  # Assuming the result is a CuPy array
+            rho_radial = (
+                getDensity(rr, pos, m, h).cpu().numpy()
+            )  # Assuming the result is a CuPy array
 
             plt.plot(rlin_np, rho_radial, color="blue")
             plt.pause(0.001)
 
+    if args.plot:
+        # add labels/legend
+        plt.sca(ax2)
+        plt.xlabel("radius")
+        plt.ylabel("density")
 
-    # add labels/legend
-    # plt.sca(ax2)
-    # plt.xlabel("radius")
-    # plt.ylabel("density")
-
-    # plt.show()
+        plt.show()
 
     return 0
