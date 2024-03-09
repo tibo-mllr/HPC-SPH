@@ -221,6 +221,9 @@ def run_torch(args):
     rho_analytic = lmbda / (4 * k) * (R**2 - rlin**2)
 
     # Simulation Main Loop
+    # from torch.profiler import profile, record_function, ProfilerActivity
+    # with profile(activities=[ProfilerActivity.CUDA], record_shapes=True) as prof:
+    #     with record_function("getAcc"):
     for i in range(Nt):
         # (1/2) kick
         vel += acc * dt / 2
@@ -263,22 +266,24 @@ def run_torch(args):
             ax1.set_facecolor("black")
             ax1.set_facecolor((0.1, 0.1, 0.1))
 
-            plt.sca(ax2)
-            plt.cla()
-            ax2.set(xlim=(0, 1), ylim=(0, 3))
-            ax2.set_aspect(0.1)
+            # plt.sca(ax2)
+            # plt.cla()
+            # ax2.set(xlim=(0, 1), ylim=(0, 3))
+            # ax2.set_aspect(0.1)
 
             # Assuming rlin and rho_analytic are already NumPy arrays or compatible types
             rlin_np = rlin.cpu().numpy()
-            plt.plot(rlin_np, rho_analytic.cpu().numpy(), color="gray", linewidth=2)
+            # plt.plot(rlin_np, rho_analytic.cpu().numpy(), color="gray", linewidth=2)
 
             # Ensure rho_radial is a NumPy array
             rho_radial = (
                 getDensity(rr, pos, m, h).cpu().numpy()
             )  # Assuming the result is a CuPy array
 
-            plt.plot(rlin_np, rho_radial, color="blue")
-            plt.pause(0.001)
+            # plt.plot(rlin_np, rho_radial, color="blue")
+            # plt.pause(0.001)
+
+    # print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
 
     if args.plot:
         # add labels/legend
