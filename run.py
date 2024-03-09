@@ -9,8 +9,8 @@ import subprocess
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-N", type=int, help="Number of particles",default=400)
 
+    parser.add_argument("-N", type=int, help="Number of particles", default=400)
     parser.add_argument(
         "--plot",
         default=False,

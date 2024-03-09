@@ -29,16 +29,26 @@ For the installation of gpu, the guide at [https://pytorch.org/get-started/local
 
 ## Running code
 ### Benchmarking speed
-Inside the benchmarking folder, first run ```python setup.py build_ext --inplace```. Next, the speeds of the different algorithm can be benchmarked by running the code inside comparing_algorithms.ipynb
+Using [profiling.py](./profiling.py) the speed of the different methods can be compared.
 
-### Attempts to improve the performance
+You can add all these of parameters:
+- `-N` to set the number of particles, default 400
+- `--plot` to enable or disable the plotting of the results, default False
+- `--cython` to enable or disable the cython implementation
+- `--numba` to enable or disable the numba implementation
+- `--cupy` to enable or disable the cupy implementation
+- `--torch` to enable or disable the pytorch implementation
+- `--normal` to enable or disable the normal implementation
+- `--experiments` to chose the number of experiments to make the average onThe code can be run using, default 10
+```bash
+python3 profiling.py
+```
 
-#### 1. Cython
-
-Cython is a superset of Python that allows you to write C extensions for Python. It is a language that makes writing C extensions for Python as easy as Python itself. Cython is a compiler that translates Python-like code files into C code. This C code can then be compiled into a Python extension module.
-
-Two cython versions of the gradW function have been made. However, this has been counterproductive as the performance of the code has decreased. The reason for this is that the overhead of calling the C function is too large compared to the time saved by the C function, due to the huge times the function is called. We will try to cythonize also the main loop of the code.
-
+For example:
+```bash
+python3 profiling.py -N 1000 --cython --numba --cupy --torch --normal --experiments 5
+```
+To make the benchmark on 5 experiments of all the methods with 1000 particles and not plot the results.
 
 
 ![Simulation](./sph.png)

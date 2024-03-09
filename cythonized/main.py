@@ -11,7 +11,7 @@ Simulate the structure of a star with SPH
 """
 
 
-def run(plot=True):
+def run(args):
     """SPH simulation"""
 
     N = args.N
@@ -60,7 +60,7 @@ def run(plot=True):
     # get density for plotting
     rho = np.asarray(getDensity(pos, pos, m, h))
 
-    if not plot:
+    if not args.plot:
         return 0
 
     plt.sca(ax1)

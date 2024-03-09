@@ -1,10 +1,22 @@
 import argparse
-from math import sqrt
-from profilers import run_cython, run_normal, run_numba, duration_dict
+from cythonized import run_cython
+from cupy_code import run_cupy
+from normal import run_normal
+from numba_code import run_numba
+from profilers import benchmark, benchmark_jit, duration_dict
+from torch_code import run_torch
 
 
 def main():
     parser = argparse.ArgumentParser()
+
+    parser.add_argument("-N", type=int, help="Number of particles", default=400)
+    parser.add_argument(
+        "--plot",
+        default=False,
+        action="store_true",
+        help="enable plotting of the animation in realtime",
+    )
     parser.add_argument(
         "--cython",
         action="store_true",
@@ -16,7 +28,12 @@ def main():
         help="Run the numba version of the code",
     )
     parser.add_argument(
-        "--gpu",
+        "--cupy",
+        action="store_true",
+        help="Run the GPU version of the code",
+    )
+    parser.add_argument(
+        "--torch",
         action="store_true",
         help="Run the GPU version of the code",
     )
@@ -35,31 +52,39 @@ def main():
 
     args = parser.parse_args()
 
-    for i in range(args.experiments):
-        print(f"Experiment {i+1}/{args.experiments}")
-        if args.cython:
-            run_cython()
-        if args.numba:
-            run_numba()
-        # if args.gpu:
-        #     run_gpu()
-        if args.normal:
-            run_normal()
+    if args.cython:
+        benchmark(
+            run_cython,
+            args.experiments,
+            args,
+        )
+    if args.numba:
+        benchmark_jit(
+            run_numba,
+            args.experiments,
+            args,
+        )
+    if args.cupy:
+        benchmark(
+            run_cupy,
+            args.experiments,
+            args,
+        )
+    if args.torch:
+        benchmark(
+            run_torch,
+            args.experiments,
+            args,
+        )
+    if args.normal:
+        benchmark(
+            run_normal,
+            args.experiments,
+            args,
+        )
 
     for key, value in duration_dict.items():
-        if "numba" in key:
-            value = value[1:]
-
-        # Calculate average
-        avg = sum(value) / len(value)
-
-        # Calculate standard deviation
-        variance = sum((x - avg) ** 2 for x in value) / len(value)
-        std_dev = sqrt(variance)
-
-        print(f"Average time ({len(value)} exp) for {key}: {(avg / 1e9):.3e} s")
-        print(f"Standard deviation for {key}: {(std_dev / 1e9):.3e} s")
-        print()
+        print(f"{key}: {value:.3f}s")
 
 
 if __name__ == "__main__":

@@ -8,16 +8,14 @@ duration_dict = {}
 def timefn(fn):
     @wraps(fn)
     def measure_time(*args, **kwargs):
-        t1 = timer()
         result = fn(*args, **kwargs)
-        t2 = timer()
 
-        # Append durations to the correct list, in order to compute the average and especially std
-        if fn.__name__ in duration_dict:
-            duration_dict[fn.__name__].append(t2 - t1)
+        if isinstance(result, tuple):
+            avg_time, first_time_run = result
+            duration_dict["numba_run"] = avg_time
+            duration_dict["numba_first_run"] = first_time_run
         else:
-            duration_dict[fn.__name__] = [t2 - t1]
-        print(f"Execution of {fn.__name__} took {((t2 - t1)/1e9):.3e} s")
+            duration_dict[args[0].__name__] = result
 
         return result
 

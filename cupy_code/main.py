@@ -111,7 +111,6 @@ def getPressure(rho, k, n):
     return P
 
 
-# @timefn
 def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     """
     Calculate the acceleration on each SPH particle
