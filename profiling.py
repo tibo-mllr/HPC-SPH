@@ -51,6 +51,7 @@ def main():
     )
 
     args = parser.parse_args()
+    args.realTime = False
 
     if args.cython:
         benchmark(
@@ -83,6 +84,8 @@ def main():
             args,
         )
 
+    print()
+    print("Average time for each function:")
     for key, value in duration_dict.items():
         print(f"{key}: {value:.3f}s")
 

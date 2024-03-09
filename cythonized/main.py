@@ -11,11 +11,10 @@ Simulate the structure of a star with SPH
 """
 
 
-def run(args):
+def run_cython(args):
     """SPH simulation"""
 
     N = args.N
-    plotRealTime = args.plot
     # Simulation parameters
     # N = 400  # Number of particles
     t = 0  # current time of the simulation
@@ -61,7 +60,6 @@ def run(args):
     rho = np.asarray(getDensity(pos, pos, m, h))
 
     if args.plot:
-
         plt.sca(ax1)
         plt.cla()
         cval = np.minimum((rho - 3) / 3, 1).flatten()

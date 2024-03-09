@@ -159,7 +159,7 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     return a
 
 
-def run(args):
+def run_torch(args):
     """SPH simulation"""
     global device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -167,7 +167,7 @@ def run(args):
     pi_tensor = torch.tensor(torch.pi, device=device)
     # Simulation parameters
     N = args.N
-    plotRealTime = args.plot
+    plotRealTime = args.realTime
     # N = 400  # Number of particles
     t = 0  # current time of the simulation
     tEnd = 12  # time at which simulation ends
@@ -241,7 +241,7 @@ def run(args):
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if plotRealTime:
+        if args.plot & (plotRealTime or (i == Nt - 1)):
             plt.sca(ax1)
             plt.cla()
 

@@ -6,6 +6,7 @@ def benchmark_jit(fn, i_count, args):
     total_time = 0
     first_run_time = 0
     for i in range(i_count):
+        print(f"Running experiment {i + 1} for {fn.__name__}")
         t1 = timer()
         fn(args)
         t2 = timer()
@@ -21,7 +22,8 @@ def benchmark_jit(fn, i_count, args):
 @timefn
 def benchmark(fn, i_count, args):
     total_time = 0
-    for _ in range(i_count):
+    for i in range(i_count):
+        print(f"Running experiment {i + 1} for {fn.__name__}")
         t1 = timer()
         fn(args)
         t2 = timer()

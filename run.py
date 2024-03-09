@@ -15,7 +15,13 @@ def main():
         "--plot",
         default=False,
         action="store_true",
-        help="enable plotting of the animation in realtime",
+        help="Enable plotting of the animation",
+    )
+    parser.add_argument(
+        "--realTime",
+        default=False,
+        action="store_true",
+        help="Enable plotting of the animation in realtime",
     )
     parser.add_argument(
         "--cython-setup",

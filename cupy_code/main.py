@@ -154,7 +154,7 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     return a
 
 
-def run(args):
+def run_cupy(args):
     """SPH simulation"""
 
     # Simulation parameters
@@ -168,7 +168,7 @@ def run(args):
     k = 0.1  # equation of state constant
     n = 1  # polytropic index
     nu = 1  # damping
-    plotRealTime = args.plot  # switch on for plotting as the simulation goes along
+    plotRealTime = args.realTime  # switch on for plotting as the simulation goes along
 
     # Generate Initial Conditions
     cp.random.seed(42)  # set the random number generator seed
@@ -222,7 +222,7 @@ def run(args):
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if plotRealTime or (i == Nt - 1):
+        if args.plot and (plotRealTime or (i == Nt - 1)):
             plt.sca(ax1)
             plt.cla()
 

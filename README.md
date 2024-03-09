@@ -40,9 +40,6 @@ You can add all these of parameters:
 - `--torch` to enable or disable the pytorch implementation
 - `--normal` to enable or disable the normal implementation
 - `--experiments` to chose the number of experiments to make the average onThe code can be run using, default 10
-```bash
-python3 profiling.py
-```
 
 For example:
 ```bash
