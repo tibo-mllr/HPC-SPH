@@ -11,7 +11,7 @@ Authors: EBENAU Luuk, KHERA Palak, MULLER Thibault Kungliga Tekniska Högskolan 
 In the final assignment for the course "Introduction to High Performance Computing" at KTH, we did research in improving the original algorithm by Philip Mocz.
 The original project aims to simulate stellar phenomena such as star formation using the Smoothed-Particle-Hydrodynamics (SPH) model, which represents fluids as a collection of interacting particles. The computation includes the Euler equation of an ideal fluid, and uses properties such as mass, position, velocity, gravity and viscosity. A Gaussian smoothing kernel is used to distribute the particles in space, aiming to study and visualize complex fluid behavior in a stellar context.
 
-## Inprovement methods
+## Improvement methods
 
 1. Cython
 2. Numba (jit)
@@ -34,7 +34,36 @@ pip3 install -r requirements.txt
 
 For the installation of gpu, the guide at [https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/) can be followed for PyTorch.
 
-## Running code
+## Usage
+
+### Setup
+
+First, you have to comply the cython code using the following command:
+
+```bash
+python3 cythonized/setup.py build_ext --inplace
+```
+
+### Running the code
+
+Using [run.py](./run.py) the different methods can be run.
+
+You can add all these of parameters:
+
+- `-N` to set the number of particles, default 400
+- `--plot` to enable or disable the plotting of the results, default False
+- `--realTime` to enable or disable the plotting of the results in real time, default False (if `plot` is disabled, `realTime` is disabled whatever the value is)
+- `--cython` to enable or disable the cython implementation
+- `--numba` to enable or disable the numba implementation
+- `--cupy` to enable or disable the cupy implementation
+- `--torch` to enable or disable the pytorch implementation
+- `--normal` to enable or disable the normal implementation
+
+For example, to run the PyTorch implementation with 1000 particles and plot in real time:
+
+```bash
+python3 run.py -N 1000 --plot --realTime --torch
+```
 
 ### Benchmarking speed
 
