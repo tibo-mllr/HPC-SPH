@@ -29,7 +29,7 @@ For the installation of gpu, the guide at [https://pytorch.org/get-started/local
 
 ## Running code
 ### Benchmarking speed
-Using [profiling.py](./profiling.py) the speed of the different methods can be compared.
+Using [time_profiling.py](./time_profiling.py) the speed of the different methods can be compared.
 
 You can add all these of parameters:
 - `-N` to set the number of particles, default 400
@@ -43,7 +43,7 @@ You can add all these of parameters:
 
 For example:
 ```bash
-python3 profiling.py -N 1000 --cython --numba --cupy --torch --normal --experiments 5
+python3 time_profiling.py -N 1000 --cython --numba --cupy --torch --normal --experiments 5
 ```
 To make the benchmark on 5 experiments of all the methods with 1000 particles and not plot the results.
 
