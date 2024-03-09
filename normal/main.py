@@ -251,6 +251,6 @@ def run(args):
 
     # Save figure
     # plt.savefig("sph.png", dpi=240)
-    plt.show()
+    # plt.show()
 
     return 0

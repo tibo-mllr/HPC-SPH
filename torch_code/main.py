@@ -244,7 +244,7 @@ def run(args):
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if plotRealTime or (i == Nt - 1):
+        if plotRealTime:
             plt.sca(ax1)
             plt.cla()
 
