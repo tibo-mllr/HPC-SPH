@@ -152,11 +152,12 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     return a
 
 
-def run():
+def run(args):
     """SPH simulation"""
-
+    N = args.N
+    plotRealTime = args.plot
     # Simulation parameters
-    N = 400  # Number of particles
+    # N = 400  # Number of particles
     t = 0  # current time of the simulation
     tEnd = 12  # time at which simulation ends
     dt = 0.04  # timestep
@@ -166,7 +167,7 @@ def run():
     k = 0.1  # equation of state constant
     n = 1  # polytropic index
     nu = 1  # damping
-    plotRealTime = True  # switch on for plotting as the simulation goes along
+    # plotRealTime = True  # switch on for plotting as the simulation goes along
 
     # Generate Initial Conditions
     np.random.seed(42)  # set the random number generator seed
@@ -250,6 +251,6 @@ def run():
 
     # Save figure
     # plt.savefig("sph.png", dpi=240)
-    plt.show()
+    # plt.show()
 
     return 0
