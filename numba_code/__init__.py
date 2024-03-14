@@ -1,1 +1,1 @@
-from .main import run_numba
+from .main import run_numba, getAcc

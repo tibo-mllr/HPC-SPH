@@ -122,3 +122,7 @@ python3 benchmark.py --minimum 400 --maximum 2000 --step 200 --cython --numba --
 
 ![Simulation](./sph.png)
 
+# Tests
+
+We made unit tests to make sure that the algorithm still has the same outputs after our optimization method. We did this by comparing the outputs of the original algorithm with that of the new code.
+
