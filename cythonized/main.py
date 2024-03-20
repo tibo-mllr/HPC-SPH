@@ -11,11 +11,10 @@ Simulate the structure of a star with SPH
 """
 
 
-def run(args):
+def run_cython(args):
     """SPH simulation"""
 
     N = args.N
-    plotRealTime = args.plot
     # Simulation parameters
     # N = 400  # Number of particles
     t = 0  # current time of the simulation
@@ -60,37 +59,32 @@ def run(args):
     # get density for plotting
     rho = np.asarray(getDensity(pos, pos, m, h))
 
-    plt.sca(ax1)
-    plt.cla()
-    cval = np.minimum((rho - 3) / 3, 1).flatten()
-    plt.scatter(pos[:, 0], pos[:, 1], c=cval, cmap=plt.cm.autumn, s=10, alpha=0.5)
-    ax1.set(xlim=(-1.4, 1.4), ylim=(-1.2, 1.2))
-    ax1.set_aspect("equal", "box")
-    ax1.set_xticks([-1, 0, 1])
-    ax1.set_yticks([-1, 0, 1])
-    ax1.set_facecolor("black")
-    ax1.set_facecolor((0.1, 0.1, 0.1))
+    if args.plot:
+        plt.sca(ax1)
+        plt.cla()
+        cval = np.minimum((rho - 3) / 3, 1).flatten()
+        plt.scatter(pos[:, 0], pos[:, 1], c=cval, cmap=plt.cm.autumn, s=10, alpha=0.5)
+        ax1.set(xlim=(-1.4, 1.4), ylim=(-1.2, 1.2))
+        ax1.set_aspect("equal", "box")
+        ax1.set_xticks([-1, 0, 1])
+        ax1.set_yticks([-1, 0, 1])
+        ax1.set_facecolor("black")
+        ax1.set_facecolor((0.1, 0.1, 0.1))
 
-    plt.sca(ax2)
-    plt.cla()
-    ax2.set(xlim=(0, 1), ylim=(0, 3))
-    ax2.set_aspect(0.1)
-    plt.plot(rlin, rho_analytic, color="gray", linewidth=2)
-    rho_radial = np.asarray(getDensity(rr, pos, m, h))
-    plt.plot(rlin, rho_radial, color="blue")
-    plt.pause(0.001)
+        plt.sca(ax2)
+        plt.cla()
+        ax2.set(xlim=(0, 1), ylim=(0, 3))
+        ax2.set_aspect(0.1)
+        plt.plot(rlin, rho_analytic, color="gray", linewidth=2)
+        rho_radial = np.asarray(getDensity(rr, pos, m, h))
+        plt.plot(rlin, rho_radial, color="blue")
+        plt.pause(0.001)
 
-    # add labels/legend
-    plt.sca(ax2)
-    plt.xlabel("radius")
-    plt.ylabel("density")
+        # add labels/legend
+        plt.sca(ax2)
+        plt.xlabel("radius")
+        plt.ylabel("density")
 
-    # Save figure
-    # plt.savefig("sph.png", dpi=240)
-    plt.show()
+        plt.show()
 
     return 0
-
-
-if __name__ == "__main__":
-    main()

@@ -4,23 +4,23 @@ from cupy_code import run_cupy
 from torch_code import run_torch
 from normal import run_normal
 from numba_code import run_numba
-import subprocess
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-N", type=int, help="Number of particles",default=400)
 
+    parser.add_argument("-N", type=int, help="Number of particles", default=400)
     parser.add_argument(
         "--plot",
         default=False,
         action="store_true",
-        help="enable plotting of the animation in realtime",
+        help="Enable plotting of the animation",
     )
     parser.add_argument(
-        "--cython-setup",
+        "--realTime",
+        default=False,
         action="store_true",
-        help="Run the cythonized setup.py file to compile the cython code",
+        help="Enable plotting of the animation in realtime",
     )
     parser.add_argument(
         "--cython",
@@ -45,9 +45,7 @@ def main():
 
     args = parser.parse_args()
 
-    if args.cython_setup:
-        subprocess.run(["python3", "cythonized/setup.py", "build_ext", "--inplace"])
-    elif args.cython:
+    if args.cython:
         run_cython(args)
     elif args.numba:
         run_numba(args)

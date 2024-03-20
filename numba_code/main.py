@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.special import gamma
 from numba import jit
-import time
 
 """
 Create Your Own Smoothed-Particle-Hydrodynamics Simulation (With Python)
@@ -12,6 +11,7 @@ Simulate the structure of a star with SPH
 """
 
 
+@jit()
 def W(x, y, z, h):
     """
     Gaussian Smoothing kernel (3D)
@@ -50,6 +50,7 @@ def gradW(x, y, z, h):
     return wx, wy, wz
 
 
+@jit()
 def getPairwiseSeparations(ri, rj):
     """
     Get pairwise desprations between 2 sets of coordinates
@@ -98,6 +99,7 @@ def getDensity(r, pos, m, h):
     return rho
 
 
+@jit()
 def getPressure(rho, k, n):
     """
     Equation of State
@@ -110,9 +112,6 @@ def getPressure(rho, k, n):
     P = k * rho ** (1 + 1 / n)
 
     return P
-
-
-times = []
 
 
 def getAcc(pos, vel, m, h, k, n, lmbda, nu):
@@ -140,13 +139,7 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     # Get pairwise distances and gradients
     dx, dy, dz = getPairwiseSeparations(pos, pos)
 
-    time_before = time.time_ns()
     dWx, dWy, dWz = gradW(dx, dy, dz, h)
-    time_after = time.time_ns()
-
-    total_time = (time_after - time_before) / 1e9
-    times.append(total_time)
-    print(f"the function took {total_time:.4f} s")
 
     # Add Pressure contribution to accelerations
     ax = -np.sum(m * (P / rho**2 + P.T / rho.T**2) * dWx, 1).reshape((N, 1))
@@ -165,10 +158,10 @@ def getAcc(pos, vel, m, h, k, n, lmbda, nu):
     return a
 
 
-def main(args):
+def run_numba(args):
     """SPH simulation"""
     N = args.N
-    plotRealTime = args.plot
+    plotRealTime = args.realTime
     # Simulation parameters
     # N = 400  # Number of particles
     t = 0  # current time of the simulation
@@ -180,7 +173,6 @@ def main(args):
     k = 0.1  # equation of state constant
     n = 1  # polytropic index
     nu = 1  # damping
-    # plotRealTime = True  # switch on for plotting as the simulation goes along
 
     # Generate Initial Conditions
     np.random.seed(42)  # set the random number generator seed
@@ -197,13 +189,8 @@ def main(args):
     pos = np.random.randn(N, 3)  # randomly selected positions and velocities
     vel = np.zeros(pos.shape)
 
-    # calculate initial gravitational accelerations************************
-    # time_before = time.time_ns()
     acc = getAcc(pos, vel, m, h, k, n, lmbda, nu)
-    # time_after = time.time_ns()
 
-    # total_time = (time_after - time_before) / 1e9
-    # print(f"the function took {total_time:.4f} s" )
     # number of timesteps
     Nt = int(np.ceil(tEnd / dt))
 
@@ -219,7 +206,6 @@ def main(args):
 
     # Simulation Main Loop
     for i in range(Nt):
-        # if i >1000: break
         # (1/2) kick
         vel += acc * dt / 2
 
@@ -239,7 +225,7 @@ def main(args):
         rho = getDensity(pos, pos, m, h)
 
         # plot in real time
-        if plotRealTime or (i == Nt - 1):
+        if args.plot and (plotRealTime or (i == Nt - 1)):
             plt.sca(ax1)
             plt.cla()
             cval = np.minimum((rho - 3) / 3, 1).flatten()
@@ -262,19 +248,12 @@ def main(args):
             plt.plot(rlin, rho_radial, color="blue")
             plt.pause(0.001)
 
-    # add labels/legend
-    plt.sca(ax2)
-    plt.xlabel("radius")
-    plt.ylabel("density")
+    if args.plot:
+        # add labels/legend
+        plt.sca(ax2)
+        plt.xlabel("radius")
+        plt.ylabel("density")
 
-    # Save figure
-    # plt.savefig("sph.png", dpi=240)
-    plt.show()
-
-    print(f"This is the average time: {sum(times[1:]) / len(times[1:])}")
+        plt.show()
 
     return 0
-
-
-if __name__ == "__main__":
-    main()

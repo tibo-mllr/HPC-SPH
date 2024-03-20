@@ -1,1 +1,1 @@
-from .main import run as run_cupy
+from .main import run_cupy
