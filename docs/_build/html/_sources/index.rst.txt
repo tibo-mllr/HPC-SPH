@@ -1,63 +1,68 @@
-# Final assignment for Introduction to High Performance Computing
+.. Smoothed-Particle Hydrodynamics Simulation documentation master file, created by
+   sphinx-quickstart on Mon Mar 25 19:04:01 2024.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
-## Create Your Own Smoothed-Particle Hydrodynamics Simulation
+Final assignment for Introduction to High Performance Computing
+===============================================================
 
-Authors: EBENAU Luuk, KHERA Palak, MULLER Thibault Kungliga Tekniska Högskolan (KTH), 2024
+Create Your Own Smoothed-Particle Hydrodynamics Simulation
+----------------------------------------------------------
 
-> Original project and code from Philip Mocz (2020) Princeton Univeristy, [@PMocz](https://twitter.com/PMocz)<br> > [📝 Read the Algorithm Write-up on Medium](https://philip-mocz.medium.com/create-your-own-smoothed-particle-hydrodynamics-simulation-with-python-76e1cec505f1)
+**Authors:** EBENAU Luuk, KHERA Palak, MULLER Thibault Kungliga Tekniska Högskolan (KTH), 2024
 
-## Introduction
+Original project and code from Philip Mocz (2020) Princeton Univeristy, `@PMocz <https://twitter.com/PMocz>`_
+
+`📝 Read the Algorithm Write-up on Medium <https://philip-mocz.medium.com/create-your-own-smoothed-particle-hydrodynamics-simulation-with-python-76e1cec505f1>`_
+
+Introduction
+------------
 
 In the final assignment for the course "Introduction to High Performance Computing" at KTH, we did research in improving the original algorithm by Philip Mocz.
 The original project aims to simulate stellar phenomena such as star formation using the Smoothed-Particle-Hydrodynamics (SPH) model, which represents fluids as a collection of interacting particles. The computation includes the Euler equation of an ideal fluid, and uses properties such as mass, position, velocity, gravity and viscosity. A Gaussian smoothing kernel is used to distribute the particles in space, aiming to study and visualize complex fluid behavior in a stellar context.
 
-## Improvement methods
+Improvement methods
+-------------------
 
 1. Cython
 2. Numba (jit)
 3. CuPy (gpu)
 4. PyTorch (gpu)
 
-## System requirements
+System requirements
+-------------------
 
 The code has been developed to be run on Linux. Using a different operating system might result in unexpected behaviour. For running the code on windows, it is recommended to use WSL2 instead.
 
 Additionally, the optimisation using CuPy and PyTorch make use of the GPU. For these codes to work a working Cuda installation matching the pytorch/cupy version has to be present.
 
-## Installation
+Installation
+------------
 
 To install all the required packages, make sure you have python installed. Then
 
-```bash
-pip3 install -r requirements.txt
-```
+.. code-block:: bash
 
-For the installation of gpu, the guide at [https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/) can be followed for PyTorch.
+   pip3 install -r requirements.txt
 
-## Usage
+For the installation of gpu, the guide at `https://pytorch.org/get-started/locally/ <https://pytorch.org/get-started/locally/>`_ can be followed for PyTorch.
 
-## Sphinx documentation
+Usage
+-----
 
-The documentation of the code can be found in the [docs](./docs) folder. To generate the documentation, the following command can be used:
-
-```bash
-cd docs
-make html
-```
-
-You can then access the documentation by opening the `index.html` file in the `_build/html` folder.
-
-### Setup
+Setup
+~~~~~
 
 First, you have to comply the cython code using the following command:
 
-```bash
-python3 cythonized/setup.py build_ext --inplace
-```
+.. code-block:: bash
 
-### Running the code
+   python3 cythonized/setup.py build_ext --inplace
 
-Using [run.py](./run.py) the different methods can be run.
+Running the code
+~~~~~~~~~~~~~~~~
+
+Using `run.py <./run.py>`_ the different methods can be run.
 
 You can add all these of parameters:
 
@@ -72,13 +77,14 @@ You can add all these of parameters:
 
 For example, to run the PyTorch implementation with 1000 particles and plot in real time:
 
-```bash
-python3 run.py -N 1000 --plot --realTime --torch
-```
+.. code-block:: bash
 
-### Benchmarking speed
+   python3 run.py -N 1000 --plot --realTime --torch
 
-Using [time_profiling.py](./time_profiling.py) the speed of the different methods can be compared.
+Benchmarking speed
+------------------
+
+Using `time_profiling.py <./time_profiling.py>`_ the speed of the different methods can be compared.
 
 You can add all these of parameters:
 
@@ -93,13 +99,14 @@ You can add all these of parameters:
 
 For example, to make the benchmark on 5 experiments of all the methods with 1000 particles and not plot the results:
 
-```bash
-python3 time_profiling.py -N 1000 --cython --numba --cupy --torch --normal --experiments 5
-```
+.. code-block:: bash
 
-### Benchmarking methods over the number of particles
+   python3 time_profiling.py -N 1000 --cython --numba --cupy --torch --normal --experiments 5
 
-Using [benchmark.py](./benchmark.py) the speed of the different methods can be compared over the number of particles.
+Benchmarking methods over the number of particles
+-------------------------------------------------
+
+Using `benchmark.py <./benchmark.py>`_ the speed of the different methods can be compared over the number of particles.
 
 You can add all these of parameters:
 
@@ -116,9 +123,14 @@ You can add all these of parameters:
 
 For example, to make the benchmark on 5 experiments of all the methods with 100 to 1000 particles with a step of 200:
 
-```bash
-python3 benchmark.py --minimum 400 --maximum 2000 --step 200 --cython --numba --cupy --torch --normal --experiments 5
-```
+.. code-block:: bash
 
-![Simulation](./sph.png)
+   python3 benchmark.py --minimum 400 --maximum 2000 --step 200 --cython --numba --cupy --torch --normal --experiments 5
 
+.. image:: ../sph.png
+   :alt: Simulation
+
+Tests
+-----
+
+We made unit tests to make sure that the algorithm still has the same outputs after our optimization method. We did this by comparing the outputs of the original algorithm with that of the new code.
