@@ -1,1 +1,1 @@
-root_folder = '/mnt/d/Projects/kth/hpc/HPC-SPH/'
+root_folder = "/mnt/d/Projects/kth/hpc/HPC-SPH/"
