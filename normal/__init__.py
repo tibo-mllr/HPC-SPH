@@ -1,1 +1,1 @@
-from .main import run_normal
+from .main import run_normal, getAcc

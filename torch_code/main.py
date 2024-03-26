@@ -263,22 +263,25 @@ def run_torch(args):
             ax1.set_facecolor("black")
             ax1.set_facecolor((0.1, 0.1, 0.1))
 
-            plt.sca(ax2)
-            plt.cla()
-            ax2.set(xlim=(0, 1), ylim=(0, 3))
-            ax2.set_aspect(0.1)
+            if args.plot:
+                plt.sca(ax2)
+                plt.cla()
+                ax2.set(xlim=(0, 1), ylim=(0, 3))
+                ax2.set_aspect(0.1)
 
             # Assuming rlin and rho_analytic are already NumPy arrays or compatible types
             rlin_np = rlin.cpu().numpy()
-            plt.plot(rlin_np, rho_analytic.cpu().numpy(), color="gray", linewidth=2)
+            if args.plot:
+                plt.plot(rlin_np, rho_analytic.cpu().numpy(), color="gray", linewidth=2)
 
             # Ensure rho_radial is a NumPy array
             rho_radial = (
                 getDensity(rr, pos, m, h).cpu().numpy()
             )  # Assuming the result is a CuPy array
 
-            plt.plot(rlin_np, rho_radial, color="blue")
-            plt.pause(0.001)
+            if args.plot:
+                plt.plot(rlin_np, rho_radial, color="blue")
+                plt.pause(0.001)
 
     if args.plot:
         # add labels/legend

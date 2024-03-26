@@ -1,1 +1,1 @@
-from .main import run_torch
+from .main import run_torch, getAcc
